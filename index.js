@@ -1,30 +1,19 @@
+// https://discord.com/api/oauth2/authorize?client_id=840773916750118953&permissions=8&scope=bot%20applications.commands
+
 const DiscordJS = require("discord.js");
+const CommandManager = require("./commands/CommandManager");
 require("dotenv").config();
 
-const guildId = "840773742560018443";
 const client = new DiscordJS.Client();
-
-const getApp = (guildId) => {
-  const app = client.api.applications(client.user.id);
-  if (guildId) {
-    app.guilds(guildId);
-  }
-  return app;
-};
 
 client.on("ready", async () => {
   console.log("The bot is ready.");
+  CommandManager.initClient(client);
 
-  const commands = await getApp(guildId).commands.get();
-
-  console.log(commands);
-
-  await getApp(guildId).commands.post({
-    data: {
-      name: "ping",
-      description: "A simple ping pong command",
-    },
-  });
+  // Initialize Commands
+  CommandManager.clearOldCommandsThenInit(client);
 });
+
+CommandManager.listenForCommands(client, DiscordJS);
 
 client.login(process.env.TOKEN);

@@ -18,7 +18,8 @@
   "homepage": "https://github.com/GummyEater/Lorm#readme",
   "dependencies": {
     "discord.js": "^12.5.3",
-    "dotenv": "^9.0.0"
+    "dotenv": "^9.0.0",
+    "puppeteer": "^9.1.1"
   },
   "devDependencies": {
     "babel-eslint": "^10.1.0",
