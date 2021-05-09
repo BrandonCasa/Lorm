@@ -11,7 +11,16 @@ client.on("ready", async () => {
   CommandManager.initClient(client);
 
   // Initialize Commands
-  CommandManager.clearOldCommandsThenInit(client);
+  await CommandManager.initCommands(client);
+});
+
+client.on("guildCreate", async (guild) => {
+  guild.systemChannel.send(`Hello, I am Lorm. Thanks for inviting me, you can access my commands by starting to type a forward slash.`);
+  await CommandManager.initNewGuild(guild.id, client);
+});
+
+client.on("guildDelete", async (guild) => {
+  await CommandManager.removeGuild(guild.id);
 });
 
 CommandManager.listenForCommands(client, DiscordJS);

@@ -1,10 +1,12 @@
-const TestPongComamnd = require("./testing/TestPongComamnd");
+const TestPongCommand = require("./testing/TestPongCommand");
 const DiscordJS = require("discord.js");
+const fs = require("fs");
 
 let client;
-const guildId = "840773742560018443";
+const localCommands = ["testlorm"];
+let botGuilds = [];
 
-const getApp = (guildId, clientIn) => {
+const getAppGuild = (guildId, clientIn) => {
   const app = clientIn.api.applications(clientIn.user.id);
   if (guildId) {
     app.guilds(guildId);
@@ -15,10 +17,42 @@ const getApp = (guildId, clientIn) => {
 // Exports
 const initClient = (clientIn) => {
   client = clientIn;
+  botGuilds = clientIn.guilds.cache.map((guild) => guild.id);
 };
 
 const initCommands = async (clientIn) => {
-  await TestPongComamnd.testPong.initCommand(guildId, clientIn);
+  await botGuilds.forEach(async (guildId) => {
+    const oldCommandsGuild = await getAppGuild(guildId, clientIn).commands.get();
+
+    await oldCommandsGuild.forEach(async (commandGuild) => {
+      if (commandGuild.application_id === "840773916750118953" && !localCommands.includes(commandGuild.name)) {
+        await getAppGuild(guildId, clientIn).commands(commandGuild.id).delete();
+      }
+    });
+
+    await TestPongCommand.testPong.initCommand(guildId, clientIn);
+  });
+};
+
+const initNewGuild = async (guildId, clientIn) => {
+  const oldCommandsGuild = await getAppGuild(guildId, clientIn).commands.get();
+
+  await oldCommandsGuild.forEach(async (commandGuild) => {
+    if (commandGuild.application_id === "840773916750118953" && !localCommands.includes(commandGuild.name)) {
+      await getAppGuild(guildId, clientIn).commands(commandGuild.id).delete();
+    }
+  });
+
+  botGuilds.push(guildId);
+
+  await TestPongCommand.testPong.initCommand(guildId, clientIn);
+};
+
+const removeGuild = async (guildId) => {
+  const index = botGuilds.indexOf(guildId);
+  if (index > -1) {
+    botGuilds.splice(index, 1);
+  }
 };
 
 const listenForCommands = (clientIn, discordJS) => {
@@ -30,7 +64,7 @@ const listenForCommands = (clientIn, discordJS) => {
 
     switch (command) {
       case "testlorm":
-        TestPongComamnd.testPong.runCommand(clientIn, sender, channelId, guildId, interaction);
+        TestPongCommand.testPong.runCommand(clientIn, sender, channelId, guildId, interaction);
         break;
       default:
         clientIn.api.interactions(interaction.id, interaction.token).callback.post({
@@ -45,16 +79,4 @@ const listenForCommands = (clientIn, discordJS) => {
   });
 };
 
-const clearOldCommandsThenInit = async (clientIn) => {
-  const oldCommands = await getApp(guildId, clientIn).commands.get();
-
-  await oldCommands.forEach(async (command) => {
-    if (command.application_id === "840773916750118953") {
-      await getApp(guildId, clientIn).commands(command.id).delete();
-    }
-  });
-
-  initCommands(clientIn);
-};
-
-module.exports = { initClient, initCommands, listenForCommands, clearOldCommandsThenInit };
+module.exports = { initClient, initCommands, listenForCommands, initNewGuild, removeGuild };
