@@ -1,0 +1,29 @@
+{
+  "name": "lorm",
+  "version": "1.0.0",
+  "description": "A Discord bot by Kannatron",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GummyEater/Lorm.git"
+  },
+  "author": "GummyEater",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/GummyEater/Lorm/issues"
+  },
+  "homepage": "https://github.com/GummyEater/Lorm#readme",
+  "dependencies": {
+    "discord.js": "^12.5.3",
+    "dotenv": "^9.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.26.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "2.2.1"
+  }
+}
