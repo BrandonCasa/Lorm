@@ -6,7 +6,7 @@ const getApp = (guildId, clientIn) => {
   return app;
 };
 
-const initCommand = async (guildId, clientIn) => {
+const initCommands = async (guildId, clientIn) => {
   await getApp(guildId, clientIn).commands.post({
     data: {
       name: "testlorm",
@@ -15,7 +15,7 @@ const initCommand = async (guildId, clientIn) => {
   });
 };
 
-const runCommand = async (clientIn, sender, channelId, guildId, interaction) => {
+const runTest = async (clientIn, sender, channelId, guildId, interaction) => {
   clientIn.api.interactions(interaction.id, interaction.token).callback.post({
     data: {
       type: 4,
@@ -26,4 +26,4 @@ const runCommand = async (clientIn, sender, channelId, guildId, interaction) => 
   });
 };
 
-module.exports = { testPong: { initCommand, runCommand } };
+module.exports = { testPong: { initCommands, runTest } };
