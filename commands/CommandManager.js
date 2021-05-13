@@ -4,7 +4,7 @@ const DiscordJS = require("discord.js");
 const fs = require("fs");
 
 let client;
-const localCommands = ["testlorm", "startpug", "endpug"];
+const localCommands = ["testlorm", "pugmaker"];
 let botGuilds = [];
 
 const getAppGuild = (guildId, clientIn) => {
@@ -74,11 +74,8 @@ const listenForCommands = (clientIn, discordJS) => {
       case "testlorm":
         await TestPongCommand.testPong.runTest(clientIn, sender, channelId, guildId, interaction);
         break;
-      case "startpug":
-        await OverwatchPugCommand.overwatchPugs.runStartPug(clientIn, sender, channelId, guildId, interaction);
-        break;
-      case "endpug":
-        await OverwatchPugCommand.overwatchPugs.runEndPug(clientIn, sender, channelId, guildId, interaction);
+      case "pugmaker":
+        await OverwatchPugCommand.overwatchPugs.runPugMaker(clientIn, sender, channelId, guildId, interaction);
         break;
       default:
         clientIn.api.interactions(interaction.id, interaction.token).callback.post({
